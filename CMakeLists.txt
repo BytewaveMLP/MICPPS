@@ -3,4 +3,4 @@ project(MICPPS)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(MICPPS main.cpp)
+add_executable(MICPPS main.cpp MipsCPU.cpp MipsCPU.h mipstypes.h)
