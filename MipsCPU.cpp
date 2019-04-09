@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "MipsCPU.h"
 
 MipsCPU::MipsCPU(const std::vector<char>& code, unsigned int memSize) : code(code), memory(std::vector<char>(memSize)), registers(std::array<int32_t, 32>()) {}
@@ -5,15 +7,23 @@ MipsCPU::MipsCPU(const std::vector<char>& code, unsigned int memSize) : code(cod
 uint32_t MipsCPU::do_rtype(mips::instruction_types::rtype inst) {
 	switch(inst.funct) {
 		case 0x20: { // ADD
-			registers[inst.rd] = registers[inst.rs] + registers[inst.rt];
+			reg(inst.rd) = reg(inst.rs) + reg(inst.rt);
 		} break;
+		case 0x22: { // SUB
+			reg(inst.rd) = reg(inst.rs) - reg(inst.rt);
+		} break;
+		default: {
+			std::stringstream ss;
+			ss << "Invalid R-type instruction @ PC = " << PC;
+			throw std::runtime_error(ss.str());
+		}
 	}
 
 	return PC + 4;
 }
 
 uint32_t MipsCPU::do_jtype(mips::instruction_types::jtype inst) {
-	if (inst.op == 0x03) registers[MIPS_REGISTER_RA] = PC;
+	if (inst.op == 0x03) reg(MIPS_REGISTER_RA) = PC;
 
 	return (PC & 0xf0000000) | (inst.target << 2);
 }
@@ -21,8 +31,13 @@ uint32_t MipsCPU::do_jtype(mips::instruction_types::jtype inst) {
 uint32_t MipsCPU::do_itype(mips::instruction_types::itype inst) {
 	switch(inst.op) {
 		case 0x0d: { // ORI
-			registers[inst.rt] = registers[inst.rs] | inst.imm;
+			reg(inst.rt) = reg(inst.rs) | inst.imm;
 		} break;
+		default: {
+			std::stringstream ss;
+			ss << "Invalid I-type instruction @ PC = " << PC;
+			throw std::runtime_error(ss.str());
+		}
 	}
 
 	return PC + 4;
@@ -41,4 +56,6 @@ void MipsCPU::step() {
 	} else {
 		PC = do_itype(inst.itype);
 	}
+
+	reg(MIPS_REGISTER_ZERO) = 0; // lazy hack to avoid writing to $zero
 }

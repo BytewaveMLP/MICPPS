@@ -37,7 +37,13 @@ int main(int argc, char *argv[]) {
 
 	MipsCPU cpu(asmRaw, 4096);
 
-	cpu.run_until_complete();
+	try {
+		cpu.run_until_complete();
+		cpu.dump_registers();
+	} catch (std::runtime_error e) {
+		std::cout << e.what() << std::endl;
+		return EXIT_FAILURE;
+	}
 
 	return EXIT_SUCCESS;
 }
