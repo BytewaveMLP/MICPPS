@@ -10,7 +10,7 @@ uint32_t MipsCPU::do_rtype(mips::instruction_types::rtype inst) {
 		case 0x02: { // SRL
 			reg(inst.rd) = reg(inst.rt) >> inst.shant;
 		} break;
-		case 0x08: {
+		case 0x08: { // JR
 			PC = reg(inst.rs) - 4;
 		} break;
 		case 0x20: case 21: { // ADD, ADDU
