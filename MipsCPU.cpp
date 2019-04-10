@@ -4,9 +4,15 @@ MipsCPU::MipsCPU(const std::vector<char>& code, unsigned int memSize) : code(cod
 
 uint32_t MipsCPU::do_rtype(mips::instruction_types::rtype inst) {
 	switch(inst.funct) {
+		case 0x00: { // SLL
+			reg(inst.rd) = reg(inst.rt) << inst.shant;
+		} break;
+		case 0x02: { // SRL
+			reg(inst.rd) = reg(inst.rt) >> inst.shant;
+		} break;
 		case 0x08: {
 			PC = reg(inst.rs) - 4;
-		}
+		} break;
 		case 0x20: case 21: { // ADD, ADDU
 			reg(inst.rd) = reg(inst.rs) + reg(inst.rt);
 		} break;
@@ -67,7 +73,7 @@ uint32_t MipsCPU::do_itype(mips::instruction_types::itype inst) {
 		} break;
 		case 0x0f: { // LUI
 			reg(inst.rt) = inst.imm << 16;
-		}
+		} break;
 		case 0x23: { // LW
 			reg(inst.rt) = memory[reg(inst.rs) + sign_extend(inst.imm)];
 		} break;
