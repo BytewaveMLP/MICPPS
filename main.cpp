@@ -35,12 +35,12 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	MipsCPU cpu(asmRaw, 0xffffffff);
+	MipsCPU cpu(asmRaw, 65535);
 
 	try {
 		cpu.run_until_complete();
 		cpu.dump_registers();
-	} catch (std::runtime_error e) {
+	} catch (std::runtime_error& e) {
 		std::cout << e.what() << std::endl;
 		return EXIT_FAILURE;
 	}
