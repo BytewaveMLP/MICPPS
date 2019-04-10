@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	MipsCPU cpu(asmRaw, 4096);
+	MipsCPU cpu(asmRaw, 0xffffffff);
 
 	try {
 		cpu.run_until_complete();

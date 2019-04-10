@@ -58,6 +58,14 @@ private:
 		return registers[index];
 	}
 
+	int32_t sign_extend(uint32_t imm, uint32_t bits = 26) {
+		uint32_t mask = 1 << (bits - 1);
+		if (mask & imm) { // immediate is signed
+			imm |= 0xffffffff << bits;
+		}
+		return imm;
+	}
+
 public:
 	MipsCPU(const std::vector<char>& code, unsigned int memSize);
 
