@@ -64,7 +64,7 @@ uint32_t MipsCPU::do_itype(mips::instruction_types::itype inst) {
 		} break;
 		case 0x0b: { // SLTIU
 			reg(inst.rt) = ((uint32_t) reg(inst.rs)) < ((uint32_t) sign_extend(inst.imm));
-		}
+		} break;
 		case 0x0c: { // ANDI
 			reg(inst.rt) = reg(inst.rs) & inst.imm;
 		} break;
